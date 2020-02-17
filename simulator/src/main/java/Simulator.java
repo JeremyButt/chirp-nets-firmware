@@ -20,20 +20,30 @@ public class Simulator
 
     public void simulate()
     {
-        byte[] phoneVirtualDevice0 = new Packet(1,0, "Hello Device no.1, How are you?").getBytes();
-        byte[] phoneVirtualDevice1 = new Packet(2,1, "Hello Device no.2, Good how are you?").getBytes();
-        byte[] phoneVirtualDevice2 = new Packet(3,2, "Hello Device no.3, Love you!").getBytes();
-        byte[] phoneVirtualDevice3 = new Packet(1,3, "Hello 1, Whats up?").getBytes();
-        byte[][] bluetoothPayloads = {phoneVirtualDevice0, phoneVirtualDevice1, phoneVirtualDevice2, phoneVirtualDevice3};
-        int i = 0;
-        for(VirtualDeviceWrapper device : this.devices)
-        {
-            device.phoneSendBluetoothPacket(bluetoothPayloads[i]);
-            i++;
-        }
-        for(VirtualDeviceWrapper device: this.devices)
-        {
-            device.start();
+        ((VirtualDeviceWrapper)this.devices.toArray()[0]).phoneSendBluetoothPacket(new Packet(1,0, "Hello Device no.1, How are you?").getBytes());
+        sleep(5000);
+        ((VirtualDeviceWrapper)this.devices.toArray()[2]).phoneSendBluetoothPacket(new Packet(3,2, "Hello Device no.3, How was your day?").getBytes());
+        ((VirtualDeviceWrapper)this.devices.toArray()[1]).phoneSendBluetoothPacket(new Packet(0,1, "Hello Device no.0! I am Good. How are you?").getBytes());
+        sleep(2000);
+        ((VirtualDeviceWrapper)this.devices.toArray()[3]).phoneSendBluetoothPacket(new Packet(2,3, "Hello Device no.2, It was good and you?").getBytes());
+        sleep(1000);
+        ((VirtualDeviceWrapper)this.devices.toArray()[0]).phoneSendBluetoothPacket(new Packet(1,0, "I am doing well? Did you see x?").getBytes());
+        sleep(4000);
+        ((VirtualDeviceWrapper)this.devices.toArray()[1]).phoneSendBluetoothPacket(new Packet(0,1, "No I did not.").getBytes());
+        sleep(5000);
+        ((VirtualDeviceWrapper)this.devices.toArray()[2]).phoneSendBluetoothPacket(new Packet(3,2, "Good. See you later!").getBytes());
+        sleep(3000);
+        ((VirtualDeviceWrapper)this.devices.toArray()[3]).phoneSendBluetoothPacket(new Packet(2,3, "See you later!").getBytes());
+        sleep(8000);
+        endSimulation();
+    }
+
+    private void sleep(int ms)
+    {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -45,7 +55,16 @@ public class Simulator
         for (int i = 0; i < numDevices; i++)
         {
             VirtualDeviceWrapper virtualDevice = new VirtualDeviceWrapper(i, signalStrenths[i], this.environment);
+            virtualDevice.start();
             this.devices.add(virtualDevice);
+        }
+    }
+
+    private void endSimulation()
+    {
+        for(VirtualDeviceWrapper device : this.devices)
+        {
+            device.kill();
         }
     }
 
