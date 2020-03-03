@@ -1,16 +1,27 @@
+#include<jni.h>
 #include "SimulatorLib.h"
 
 #include <iostream>
 
-void send(JNIEnv *env, jobject obj, int toAddress, char payload[], size_t len)
+SimulatorRxTx::SimulatorRxTx()
 {
-    jclass cls = env->FindClass(clazz);
-    jmethodID m_id = env->GetMethodID(cls, "send", "(I[B)V");
+}
+
+void SimulatorRxTx::init(JNIEnv* env, jobject obj)
+{
+    this->env = env;
+    this->obj = obj;
+}
+
+void SimulatorRxTx::send(int toAddress, char payload[], size_t len)
+{
+    jclass cls = this->env->FindClass(clazz);
+    jmethodID m_id = this->env->GetMethodID(cls, "send", "(I[B)V");
     if (m_id != 0)
     {
-        jbyteArray packet = env->NewByteArray(len);
-        env->SetByteArrayRegion(packet, 0, len, reinterpret_cast<jbyte*>(payload));
-        env->CallVoidMethod(obj, m_id, toAddress, packet);
+        jbyteArray packet = this->env->NewByteArray(len);
+        this->env->SetByteArrayRegion(packet, 0, len, reinterpret_cast<jbyte*>(payload));
+        this->env->CallVoidMethod(this->obj, m_id, toAddress, packet);
     }
     else
     {
@@ -18,16 +29,16 @@ void send(JNIEnv *env, jobject obj, int toAddress, char payload[], size_t len)
     }
 }
 
-char* receive(JNIEnv *env, jobject obj)
+char* SimulatorRxTx::receive()
 {
-    jclass cls = env->FindClass(clazz);
-    jmethodID m_id = env->GetMethodID(cls, "receive", "()[B");
+    jclass cls = this->env->FindClass(clazz);
+    jmethodID m_id = this->env->GetMethodID(cls, "receive", "()[B");
     if (m_id != 0)
     {
-        jbyteArray packet = (jbyteArray)env->CallObjectMethod(obj, m_id);
+        jbyteArray packet = (jbyteArray)this->env->CallObjectMethod(this->obj, m_id);
         if(packet != 0)
         {
-            return getCharsFromJByteArray(env, packet);
+            return getCharsFromJByteArray(packet);
         }
         return nullptr;
     }
@@ -37,16 +48,16 @@ char* receive(JNIEnv *env, jobject obj)
     }
 }
 
-char* receiveBluetooth(JNIEnv *env, jobject obj)
+char* SimulatorRxTx::receiveBluetooth()
 {
-    jclass cls = env->FindClass(clazz);
-    jmethodID m_id = env->GetMethodID(cls, "recieveBluetoothPacket", "()[B");
+    jclass cls = this->env->FindClass(clazz);
+    jmethodID m_id = this->env->GetMethodID(cls, "recieveBluetoothPacket", "()[B");
     if (m_id != 0)
     {
-        jbyteArray packet = (jbyteArray)env->CallObjectMethod(obj, m_id);
+        jbyteArray packet = (jbyteArray)this->env->CallObjectMethod(this->obj, m_id);
         if(packet != 0)
         {
-            return getCharsFromJByteArray(env, packet);
+            return getCharsFromJByteArray(packet);
         }
         return nullptr;
     }
@@ -56,15 +67,15 @@ char* receiveBluetooth(JNIEnv *env, jobject obj)
     }
 }
 
-void sendBluetooth(JNIEnv *env, jobject obj, char payload[], size_t len)
+void SimulatorRxTx::sendBluetooth(char payload[], size_t len)
 {
-    jclass cls = env->FindClass(clazz);
-    jmethodID m_id = env->GetMethodID(cls, "sendBluetoothPacket", "([B)V");
+    jclass cls = this->env->FindClass(clazz);
+    jmethodID m_id = this->env->GetMethodID(cls, "sendBluetoothPacket", "([B)V");
     if (m_id != 0)
     {
-        jbyteArray packet = env->NewByteArray(len);
-        env->SetByteArrayRegion(packet, 0, len, reinterpret_cast<jbyte*>(payload));
-        env->CallVoidMethod(obj, m_id, packet);
+        jbyteArray packet = this->env->NewByteArray(len);
+        this->env->SetByteArrayRegion(packet, 0, len, reinterpret_cast<jbyte*>(payload));
+        this->env->CallVoidMethod(this->obj, m_id, packet);
     }
     else
     {
@@ -72,21 +83,21 @@ void sendBluetooth(JNIEnv *env, jobject obj, char payload[], size_t len)
     }
 }
 
-int getToAddress(char packet[])
+int SimulatorRxTx::getToAddress(char packet[])
 {
     return (int)((int)packet[0]) - 48;
 }
 
-char* getCharsFromJByteArray(JNIEnv *env, jbyteArray array)
+char* SimulatorRxTx::getCharsFromJByteArray(jbyteArray array)
 {
     char *chars = NULL;
     jbyte *bytes;
-    bytes = env->GetByteArrayElements(array, 0);
-    int chars_len = env->GetArrayLength(array);
+    bytes = this->env->GetByteArrayElements(array, 0);
+    int chars_len = this->env->GetArrayLength(array);
     chars = new char[chars_len + 1];
     memset(chars,0,chars_len + 1);
     memcpy(chars, bytes, chars_len);
     chars[chars_len] = 0;
-    env->ReleaseByteArrayElements(array, bytes, 0);
+    this->env->ReleaseByteArrayElements(array, bytes, 0);
     return chars;
 }

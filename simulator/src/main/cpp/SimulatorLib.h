@@ -1,10 +1,21 @@
 #include <jni.h>
 
+#include "ChirpRxTx.h"
+
 #define clazz "VirtualDeviceWrapper"
 
-void send(JNIEnv*, jobject, int, char[], size_t);
-char* receive(JNIEnv*, jobject);
-char* receiveBluetooth(JNIEnv*, jobject);
-void sendBluetooth(JNIEnv*, jobject, char[], size_t);
-int getToAddress(char[]);
-char* getCharsFromJByteArray(JNIEnv*, jbyteArray);
+class SimulatorRxTx: public ChirpRxTx
+{
+    public:
+        SimulatorRxTx();
+        void init(JNIEnv* env, jobject obj);
+        void send(int, char[], size_t);
+        char* receive();
+        void sendBluetooth(char[], size_t);
+        char* receiveBluetooth();
+        int getToAddress(char[]);
+    private:
+        JNIEnv* env;
+        jobject obj;
+        char* getCharsFromJByteArray(jbyteArray);
+};

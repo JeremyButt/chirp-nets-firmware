@@ -6,18 +6,21 @@
 
 JNIEXPORT void JNICALL Java_VirtualDeviceWrapper_main(JNIEnv *env, jobject obj)
 {
-	char* bluetoothPacket = receiveBluetooth(env, obj);
+	SimulatorRxTx rxtx = SimulatorRxTx();
+	rxtx.init(env, obj);
+
+	char* bluetoothPacket = rxtx.receiveBluetooth();
 	if(bluetoothPacket != nullptr)
 	{
-		int toAddress = getToAddress(bluetoothPacket);
+		int toAddress = rxtx.getToAddress(bluetoothPacket);
 		char* payload = bluetoothPacket;
-		send(env, obj, toAddress, payload, strlen(payload));
+		rxtx.send(toAddress, payload, strlen(payload));
 	}
 
 	
-	char* receivedData = receive(env, obj);
+	char* receivedData = rxtx.receive();
 	if(receivedData != nullptr)
 	{
-		sendBluetooth(env, obj, receivedData, strlen(receivedData));
+		rxtx.sendBluetooth(receivedData, strlen(receivedData));
 	}
 }
