@@ -3,7 +3,7 @@
 #include <SPI.h>                // Included with Arduino IDE
 #include <ArduinoJson.h>        // https://arduinojson.org/d
 
-#include "ChirpRxTx.h"
+#include "ChirpFMRxTx.h"
 
 // Node and network config
 #define NODEID        2    // The ID of this node (must be different for every node on network)
@@ -27,7 +27,7 @@
 #define RF69_IRQ_NUM  digitalPinToInterrupt(RF69_IRQ_PIN)
 #define LED           17
 
-class RFM69RxTx: public ChirpRxTx
+class RFM69RxTx: public ChirpFMRxTx
 {
     public:
         RFM69RxTx();
@@ -35,7 +35,5 @@ class RFM69RxTx: public ChirpRxTx
         void resetRadio();
         void send(int, char[], size_t);
         char* receive();
-        void sendBluetooth(char[], size_t);
-        char* receiveBluetooth();
         int getToAddress(char[]);
 };

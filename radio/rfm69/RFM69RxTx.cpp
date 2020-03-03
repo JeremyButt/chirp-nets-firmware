@@ -63,16 +63,6 @@ char* RFM69RxTx::receive()
     }
 }
 
-void RFM69RxTx::sendBluetooth(char payload[], size_t len)
-{
-    //Tim's garb daddy code
-}
-    
-char* RFM69RxTx::receiveBluetooth()
-{
-    //Tim's garb daddy code
-}
-
 int RFM69RxTx::getToAddress(char[] payload)
 {
     return (int)((int)packet[0]) - 48;

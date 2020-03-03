@@ -1,54 +1,19 @@
-#include<jni.h>
-#include "SimulatorLib.h"
-
+#include <jni.h>
 #include <iostream>
 
-SimulatorRxTx::SimulatorRxTx()
+#include "SimulatorBluetoothRxTx.h"
+
+SimulatorBluetoothRxTx::SimulatorBluetoothRxTx()
 {
 }
 
-void SimulatorRxTx::init(JNIEnv* env, jobject obj)
+void SimulatorBluetoothRxTx::init(JNIEnv* env, jobject obj)
 {
     this->env = env;
     this->obj = obj;
 }
 
-void SimulatorRxTx::send(int toAddress, char payload[], size_t len)
-{
-    jclass cls = this->env->FindClass(clazz);
-    jmethodID m_id = this->env->GetMethodID(cls, "send", "(I[B)V");
-    if (m_id != 0)
-    {
-        jbyteArray packet = this->env->NewByteArray(len);
-        this->env->SetByteArrayRegion(packet, 0, len, reinterpret_cast<jbyte*>(payload));
-        this->env->CallVoidMethod(this->obj, m_id, toAddress, packet);
-    }
-    else
-    {
-        std::cout << "ERROR: Function \"send\" not found!" << std::endl;
-    }
-}
-
-char* SimulatorRxTx::receive()
-{
-    jclass cls = this->env->FindClass(clazz);
-    jmethodID m_id = this->env->GetMethodID(cls, "receive", "()[B");
-    if (m_id != 0)
-    {
-        jbyteArray packet = (jbyteArray)this->env->CallObjectMethod(this->obj, m_id);
-        if(packet != 0)
-        {
-            return getCharsFromJByteArray(packet);
-        }
-        return nullptr;
-    }
-    else
-    {
-        std::cout << "ERROR: Function \"receive\" not found!" << std::endl;
-    }
-}
-
-char* SimulatorRxTx::receiveBluetooth()
+char* SimulatorBluetoothRxTx::receive()
 {
     jclass cls = this->env->FindClass(clazz);
     jmethodID m_id = this->env->GetMethodID(cls, "recieveBluetoothPacket", "()[B");
@@ -67,7 +32,7 @@ char* SimulatorRxTx::receiveBluetooth()
     }
 }
 
-void SimulatorRxTx::sendBluetooth(char payload[], size_t len)
+void SimulatorBluetoothRxTx::send(char payload[], size_t len)
 {
     jclass cls = this->env->FindClass(clazz);
     jmethodID m_id = this->env->GetMethodID(cls, "sendBluetoothPacket", "([B)V");
@@ -83,12 +48,7 @@ void SimulatorRxTx::sendBluetooth(char payload[], size_t len)
     }
 }
 
-int SimulatorRxTx::getToAddress(char packet[])
-{
-    return (int)((int)packet[0]) - 48;
-}
-
-char* SimulatorRxTx::getCharsFromJByteArray(jbyteArray array)
+char* SimulatorBluetoothRxTx::getCharsFromJByteArray(jbyteArray array)
 {
     char *chars = NULL;
     jbyte *bytes;
