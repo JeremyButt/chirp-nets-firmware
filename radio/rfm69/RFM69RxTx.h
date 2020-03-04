@@ -1,6 +1,6 @@
 #include <RFM69.h>              // https://www.github.com/lowpowerlab/rfm69
 #include <RFM69_ATC.h>          // https://www.github.com/lowpowerlab/rfm69
-#include <SPI.h>                // Included with Arduino IDE
+#include <SPI.h>                // Included with Arduino IDE, should also add https://github.com/LowPowerLab/SPIFlash
 #include <ArduinoJson.h>        // https://arduinojson.org/d
 
 #include "ChirpFMRxTx.h"

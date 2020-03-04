@@ -4,11 +4,13 @@
 #include <ArduinoJson.h>        // https://arduinojson.org/d
 #include "RFM69RxTx.h"
 
+RFM69 radio(RF69_SPI_CS, RF69_IRQ_PIN, false, RF69_IRQ_NUM);
+
 RFM69RxTx::RFM69RxTx()
 {
 }
 
-RFM69RxTx::init()
+void RFM69RxTx::init()
 {
     Serial.begin(115200);
     // Reset the radio
@@ -21,7 +23,7 @@ RFM69RxTx::init()
     #endif
 }
 
-RFM69RxTx::resetRadio()
+void RFM69RxTx::resetRadio()
 {
     if (Serial) Serial.print("Resetting radio...");
     pinMode(RF69_RESET, OUTPUT);
@@ -63,7 +65,7 @@ char* RFM69RxTx::receive()
     }
 }
 
-int RFM69RxTx::getToAddress(char[] payload)
+int RFM69RxTx::getToAddress(char payload[])
 {
-    return (int)((int)packet[0]) - 48;
+    return (int)((int)payload[0]) - 48;
 }
