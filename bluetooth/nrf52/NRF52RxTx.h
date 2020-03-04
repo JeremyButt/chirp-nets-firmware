@@ -1,5 +1,6 @@
-#include "ChirpBluetoothRxTx.h"
 #include <bluefruit.h>
+#include <SPI.h>                // Included with Arduino IDE, should also add https://github.com/LowPowerLab/SPIFlash
+#include "ChirpBluetoothRxTx.h"
 
 // Function prototypes for packetparser.cpp
 uint8_t readPacket (BLEUart *ble_uart, uint16_t timeout);
@@ -14,6 +15,6 @@ class NRF52RxTx: public ChirpBluetoothRxTx
     public:
         NRF52RxTx();
         void init();
-        void send(char[], int);
+        void send(char[], size_t);
         char* receive();
 };

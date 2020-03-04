@@ -63,7 +63,7 @@ void NRF52RxTx::init()
     Serial.println();
 }
 
-void NRF52RxTx::send(char payload[], int len)
+void NRF52RxTx::send(char payload[], size_t len)
 {
     // Forward data from HW Serial to BLEUART
     while (Serial.available())

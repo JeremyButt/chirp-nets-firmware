@@ -1,7 +1,3 @@
-#include <RFM69.h>              // https://www.github.com/lowpowerlab/rfm69
-#include <RFM69_ATC.h>          // https://www.github.com/lowpowerlab/rfm69
-#include <SPI.h>                // Included with Arduino IDE
-#include <ArduinoJson.h>        // https://arduinojson.org/d
 #include "RFM69RxTx.h"
 
 RFM69 radio(RF69_SPI_CS, RF69_IRQ_PIN, false, RF69_IRQ_NUM);
