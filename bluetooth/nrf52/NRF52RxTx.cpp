@@ -1,12 +1,13 @@
 #include "NRF52RxTx.h"
 
-// OTA DFU service
-BLEDfu bledfu;
 
-// Uart over BLE service
-BLEUart bleuart;
+NRF52RxTx::NRF52RxTx()
+{
+    this->bledfu = new BLEDfu();
+    this->bleuart = new BLEUart();;
+}
 
-void startAdv(void)
+void NRF52RxTx::startAdv(void)
 {
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
@@ -34,10 +35,6 @@ void startAdv(void)
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
 }
 
-NRF52RxTx::NRF52RxTx()
-{
-}
-
 void NRF52RxTx::init()
 {
     Serial.begin(115200);
@@ -51,10 +48,10 @@ void NRF52RxTx::init()
     Bluefruit.setName("Bluefruit52");
 
     // To be consistent OTA DFU should be added first if it exists
-    bledfu.begin();
+    this->bledfu.begin();
 
     // Configure and start the BLE Uart service
-    bleuart.begin();
+    this->bleuart.begin();
 
     // Set up and start advertising
     startAdv();

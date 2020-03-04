@@ -36,4 +36,6 @@ class RFM69RxTx: public ChirpFMRxTx
         void send(int, char[], size_t);
         char* receive();
         int getToAddress(char[]);
+    private:
+        RFM69 radio;
 };

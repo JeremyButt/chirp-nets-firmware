@@ -1,9 +1,9 @@
 #include "RFM69RxTx.h"
 
-RFM69 radio(RF69_SPI_CS, RF69_IRQ_PIN, false, RF69_IRQ_NUM);
 
 RFM69RxTx::RFM69RxTx()
 {
+    this->radio = RFM69(RF69_SPI_CS, RF69_IRQ_PIN, false, RF69_IRQ_NUM);
 }
 
 void RFM69RxTx::init()
