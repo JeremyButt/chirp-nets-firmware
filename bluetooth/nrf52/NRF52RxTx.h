@@ -3,6 +3,6 @@
 class NRF52RxTx: public ChirpBluetoothRxTx
 {
     public:
-        void send(char[], size_t);
+        void send(char[], int);
         char* receive();
 };
