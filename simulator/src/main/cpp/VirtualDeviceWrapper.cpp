@@ -1,23 +1,29 @@
 #include "VirtualDeviceWrapper.h"
-#include "SimulatorLib.h"
+#include "SimulatorFMRxTx.h"
+#include "SimulatorBluetoothRxTx.h"
 #include <iostream>
 
 
 
 JNIEXPORT void JNICALL Java_VirtualDeviceWrapper_main(JNIEnv *env, jobject obj)
 {
-	char* bluetoothPacket = receiveBluetooth(env, obj);
+	SimulatorFMRxTx radio = SimulatorFMRxTx();
+	SimulatorBluetoothRxTx bluetooth = SimulatorBluetoothRxTx();
+	radio.init(env, obj);
+	bluetooth.init(env, obj);
+
+	char* bluetoothPacket = bluetooth.receive();
 	if(bluetoothPacket != nullptr)
 	{
-		int toAddress = getToAddress(bluetoothPacket);
+		int toAddress = radio.getToAddress(bluetoothPacket);
 		char* payload = bluetoothPacket;
-		send(env, obj, toAddress, payload, strlen(payload));
+		radio.send(toAddress, payload, strlen(payload));
 	}
 
 	
-	char* receivedData = receive(env, obj);
+	char* receivedData = radio.receive();
 	if(receivedData != nullptr)
 	{
-		sendBluetooth(env, obj, receivedData, strlen(receivedData));
+		bluetooth.send(receivedData, strlen(receivedData));
 	}
 }
