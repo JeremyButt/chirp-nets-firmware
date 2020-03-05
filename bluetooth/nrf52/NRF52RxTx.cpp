@@ -3,8 +3,8 @@
 
 NRF52RxTx::NRF52RxTx()
 {
-    this->bledfu = new BLEDfu();
-    this->bleuart = new BLEUart();;
+    this->bledfu = BLEDfu();
+    this->bleuart = BLEUart();
 }
 
 void NRF52RxTx::startAdv(void)
