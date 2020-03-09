@@ -1,6 +1,5 @@
 #include "NRF52RxTx.h"
 
-
 NRF52RxTx::NRF52RxTx()
 {
     this->bledfu = BLEDfu();
@@ -9,18 +8,18 @@ NRF52RxTx::NRF52RxTx()
 
 void NRF52RxTx::startAdv(void)
 {
-  // Advertising packet
-  Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
-  Bluefruit.Advertising.addTxPower();
+    // Advertising packet
+    Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
+    Bluefruit.Advertising.addTxPower();
 
-  // Include the BLE UART (AKA 'NUS') 128-bit UUID
-  Bluefruit.Advertising.addService(bleuart);
+    // Include the BLE UART (AKA 'NUS') 128-bit UUID
+    Bluefruit.Advertising.addService(bleuart);
 
-  // Secondary Scan Response packet (optional)
-  // Since there is no room for 'Name' in Advertising packet
-  Bluefruit.ScanResponse.addName();
+    // Secondary Scan Response packet (optional)
+    // Since there is no room for 'Name' in Advertising packet
+    Bluefruit.ScanResponse.addName();
 
-  /* Start Advertising
+    /* Start Advertising
      - Enable auto advertising if disconnected
      - Interval:  fast mode = 20 ms, slow mode = 152.5 ms
      - Timeout for fast mode is 30 seconds
@@ -29,22 +28,23 @@ void NRF52RxTx::startAdv(void)
      For recommended advertising interval
      https://developer.apple.com/library/content/qa/qa1931/_index.html
   */
-  Bluefruit.Advertising.restartOnDisconnect(true);
-  Bluefruit.Advertising.setInterval(32, 244);    // in unit of 0.625 ms
-  Bluefruit.Advertising.setFastTimeout(30);      // number of seconds in fast mode
-  Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
+    Bluefruit.Advertising.restartOnDisconnect(true);
+    Bluefruit.Advertising.setInterval(32, 244); // in unit of 0.625 ms
+    Bluefruit.Advertising.setFastTimeout(30);   // number of seconds in fast mode
+    Bluefruit.Advertising.start(0);             // 0 = Don't stop advertising after n seconds
 }
 
 void NRF52RxTx::init()
 {
     Serial.begin(115200);
-    while ( !Serial ) delay(10);   // for nrf52840 with native usb
+    while (!Serial)
+        delay(10); // for nrf52840 with native usb
 
     Serial.println(F("Adafruit Bluefruit52 Controller App Example"));
     Serial.println(F("-------------------------------------------"));
 
     Bluefruit.begin();
-    Bluefruit.setTxPower(4);    // Check bluefruit.h for supported values
+    Bluefruit.setTxPower(4); // Check bluefruit.h for supported values
     Bluefruit.setName("Bluefruit52");
 
     // To be consistent OTA DFU should be added first if it exists
@@ -74,15 +74,17 @@ void NRF52RxTx::send(char payload[], size_t len)
         Serial.println("Written");
     }
 }
-    
-char* NRF52RxTx::receive()
+
+char *NRF52RxTx::receive()
 {
     // Forward from BLEUART to HW Serial
+    int i = 0;
+    char ch[30];
     while (bleuart.available())
     {
-        Serial.print("receiving");
-        uint8_t ch;
-        ch = (uint8_t) bleuart.read();
+        
+        ch[i] = (char)bleuart.read();
         Serial.write(ch);
     }
+    return ch;
 }
