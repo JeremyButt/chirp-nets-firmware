@@ -41,7 +41,7 @@ void RFM69RxTx::send(int toAddress, char payload[], size_t len)
 
         if (Serial)
             Serial.println("Sending");
-        if (radio.sendWithRetry(toAddress, payload, len, 3, 200))
+        if (radio.sendWithRetry(toAddress, payload, len, 50, 200))
         {
             if (Serial)
                 Serial.println("ACK received");

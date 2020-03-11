@@ -27,17 +27,15 @@ void loop()
     Serial.println("Sending over radio");
     Serial.println(packet);
     bool received = false;
-    while (!received) {
-      radio_io.send(1, packet, sizeof(packet));
-      char payload[122] = {NULL};
-      radio_io.receive(payload);
-      if (payload[0])
-      {
-        received = true;
-        Serial.println("Sending to phone from radio");
-        Serial.println(payload);
-        blue_io.send(payload, sizeof(payload));
-      }
-    }
+    radio_io.send(1, packet, sizeof(packet));
+  }
+  char payload[122] = {NULL};
+  radio_io.receive(payload);
+  if (payload[0])
+  {
+    received = true;
+    Serial.println("Sending to phone from radio");
+    Serial.println(payload);
+    blue_io.send(payload, sizeof(payload));
   }
 }
