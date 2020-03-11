@@ -41,7 +41,7 @@ void RFM69RxTx::send(int toAddress, char payload[], size_t len)
 
         if (Serial)
             Serial.println("Sending");
-        if (radio.sendWithRetry(toAddress, payload, len, 50, 200))
+        if (radio.sendWithRetry(toAddress, payload, len, 5, 2000))
         {
             if (Serial)
                 Serial.println("ACK received");
@@ -54,19 +54,19 @@ void RFM69RxTx::send(int toAddress, char payload[], size_t len)
     }
 }
 
-void RFM69RxTx::receive(char packet[])
+void RFM69RxTx::receive(char *packet)
 {
     // Receive
     if (radio.receiveDone())
     {
         if (Serial)
             Serial.println("Message received");
+        strcpy(packet, (char *)radio.DATA);
         if (radio.ACKRequested())
         {
             radio.sendACK();
         }
         delay(100);
-        packet = (char*)radio.DATA;
     }
 }
 
