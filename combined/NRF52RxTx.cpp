@@ -75,16 +75,44 @@ void NRF52RxTx::send(char payload[], size_t len)
     }
 }
 
-char *NRF52RxTx::receive()
+void NRF52RxTx::receive(char ch[])
 {
     // Forward from BLEUART to HW Serial
     int i = 0;
-    char ch[122];
     while (bleuart.available())
     {
-        
         ch[i] = (char)bleuart.read();
-        Serial.write(ch);
+        if (ch[i] != 0)
+        {
+            i++;
+        }
+        Serial.println(ch[i]);
     }
-    return ch;
+}
+
+bool NRF52RxTx::checkChecksum(char packet[], size_t len)
+{
+    uint8_t xsum = 0;
+    uint8_t checksum = packet[len - 1];
+    for (uint8_t i = 0; i < len - 1; i++)
+    {
+        xsum += packet[i];
+    }
+    xsum = ~xsum;
+    if (xsum != checksum)
+    {
+        return false;
+    }
+    return true;
+}
+
+uint8_t NRF52RxTx::getChecksum(char packet[], size_t len)
+{
+    uint8_t xsum = 0;
+    for (uint8_t i = 0; i < len - 1; i++)
+    {
+        xsum += packet[i];
+    }
+    xsum = ~xsum;
+    return xsum;
 }
