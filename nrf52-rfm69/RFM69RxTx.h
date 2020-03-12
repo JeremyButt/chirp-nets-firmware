@@ -6,7 +6,7 @@
 #include "ChirpFMRxTx.h"
 
 // Node and network config
-#define NODEID        2    // The ID of this node (must be different for every node on network)
+#define NODEID        3    // The ID of this node (must be different for every node on network)
 #define NETWORKID     100  // The network ID
 
 // Are you using the RFM69 Wing? Uncomment if you are.

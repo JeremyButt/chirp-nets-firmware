@@ -26,7 +26,7 @@ void loop()
   {
     Serial.println("Sending over radio");
     Serial.println(packet);
-    radio_io.send(3, packet, sizeof(packet));
+    radio_io.send(2, packet, sizeof(packet));
   }
 
   char payload[122] = {NULL};
