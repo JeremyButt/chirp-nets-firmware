@@ -8,7 +8,9 @@ class NRF52RxTx: public ChirpBluetoothRxTx
         NRF52RxTx();
         void init();
         void send(char[], size_t);
-        char* receive();
+        void receive(char[]);
+        bool checkChecksum(char[], size_t);
+        uint8_t getChecksum(char[], size_t);
     private:
         void startAdv(void);
         BLEDfu bledfu;
