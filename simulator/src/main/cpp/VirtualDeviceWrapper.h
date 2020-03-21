@@ -15,10 +15,18 @@ extern "C" {
 #define VirtualDeviceWrapper_MAX_PRIORITY 10L
 /*
  * Class:     VirtualDeviceWrapper
- * Method:    main
+ * Method:    init
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_VirtualDeviceWrapper_main
+JNIEXPORT void JNICALL Java_VirtualDeviceWrapper_init
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     VirtualDeviceWrapper
+ * Method:    loop
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_VirtualDeviceWrapper_loop
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

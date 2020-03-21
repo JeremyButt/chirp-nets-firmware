@@ -16,12 +16,13 @@ void SimulatorFMRxTx::init(JNIEnv* env, jobject obj)
 void SimulatorFMRxTx::send(int toAddress, char payload[], size_t len)
 {
     jclass cls = this->env->FindClass(clazz);
-    jmethodID m_id = this->env->GetMethodID(cls, "send", "(I[B)V");
+    jmethodID m_id = this->env->GetMethodID(cls, "send", "(II[B)V");
     if (m_id != 0)
     {
+        int nodeId = this->getNodeId();
         jbyteArray packet = this->env->NewByteArray(len);
         this->env->SetByteArrayRegion(packet, 0, len, reinterpret_cast<jbyte*>(payload));
-        this->env->CallVoidMethod(this->obj, m_id, toAddress, packet);
+        this->env->CallVoidMethod(this->obj, m_id, nodeId, toAddress, packet);
     }
     else
     {
@@ -46,11 +47,6 @@ char* SimulatorFMRxTx::receive()
     {
         std::cout << "ERROR: Function \"receive\" not found!" << std::endl;
     }
-}
-
-int SimulatorFMRxTx::getToAddress(char packet[])
-{
-    return (int)((int)packet[0]) - 48;
 }
 
 char* SimulatorFMRxTx::getCharsFromJByteArray(jbyteArray array)
