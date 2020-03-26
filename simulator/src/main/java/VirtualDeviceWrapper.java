@@ -9,14 +9,18 @@ public class VirtualDeviceWrapper extends Thread{
     private LinkedList<byte[]> bluetoothPacketsReceiving;
     private LinkedList<byte[]> bluetoothPacketsSending;
     private Environment environment;
+    private long radioPtr;
+    private long bluetoothPtr;
+    private long routerPtr;
 
-    public VirtualDeviceWrapper(int deviceId, int signalStrength, Environment environment)
+
+    public VirtualDeviceWrapper(int deviceId, Environment environment)
     {
         this.deviceId = deviceId;
-        this.signalStrenth = signalStrength;
         this.bluetoothPacketsReceiving = new LinkedList<>();
         this.bluetoothPacketsSending = new LinkedList<>();
         this.environment = environment;
+        this.init();
     }
 
     public void start()
@@ -30,8 +34,8 @@ public class VirtualDeviceWrapper extends Thread{
         System.loadLibrary("VirtualDeviceWrapper");
         while(this.isRunning)
         {
-            this.main();
-            String bluetoothPacket = this.phoneRecieveBluetoothPacket();
+            this.loop();
+            String bluetoothPacket = this.phoneReceiveBluetoothPacket();
             if(bluetoothPacket != null)
             {
                 System.out.println("["+System.nanoTime()+"]"+"(Device-"+this.deviceId+") " + bluetoothPacket);
@@ -44,16 +48,12 @@ public class VirtualDeviceWrapper extends Thread{
         this.isRunning = false;
     }
 
-    public native void main();
+    public native synchronized void init();
+    public native synchronized void loop();
 
-    public int getDeviceId()
+    public void send(int nodeId, int toAddress, byte[] payload)
     {
-        return this.deviceId;
-    }
-
-    public void send(int toAddress, byte[] payload)
-    {
-        this.environment.putPacketInTransit(toAddress, payload);
+        this.environment.putPacketInTransit(nodeId, toAddress, payload);
     }
 
     public byte[] receive()
@@ -61,7 +61,7 @@ public class VirtualDeviceWrapper extends Thread{
         return this.environment.getPacketInTransit(this.deviceId);
     }
 
-    public byte[] recieveBluetoothPacket()
+    public byte[] receiveBluetoothPacket()
     {
         try
         {
@@ -83,16 +83,23 @@ public class VirtualDeviceWrapper extends Thread{
         this.bluetoothPacketsReceiving.add(payload);
     }
 
-    public String phoneRecieveBluetoothPacket()
+    public String phoneReceiveBluetoothPacket()
     {
         try
         {
-            return new String(this.bluetoothPacketsSending.pop(), "UTF-8");
+            byte[] payload = this.bluetoothPacketsSending.pop();
+            if(payload != null)
+            {
+                return new Packet(payload).toString();
+            }
+            else
+            {
+                return null;
+            }
         }
-        catch(NoSuchElementException | UnsupportedEncodingException e)
+        catch(NoSuchElementException e)
         {
             return null;
         }
     }
-
 }

@@ -7,7 +7,7 @@ public class VirtualDeviceWrapperTest {
     public void Test_VirtualDeviceWrapper_Boot(){
         System.loadLibrary("VirtualDeviceWrapper");
         Environment env = new Environment();
-        VirtualDeviceWrapper virtualDevice = new VirtualDeviceWrapper(1, 10, env);
+        VirtualDeviceWrapper virtualDevice = new VirtualDeviceWrapper(1, env);
 
         try {
             virtualDevice.phoneSendBluetoothPacket("1helloworld2!".getBytes("UTF-8"));
