@@ -2,8 +2,8 @@
 class ChirpFMRxTx
 {
     public:
-        virtual void send(int, char[], size_t);
-        virtual char* receive();
+        virtual void send(int, char[], size_t) = 0;
+        virtual char* receive() = 0;
         int getNodeId();
         int getGroupId();
         void setNodeId(int);

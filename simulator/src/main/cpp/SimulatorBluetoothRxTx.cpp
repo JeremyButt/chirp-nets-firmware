@@ -29,6 +29,7 @@ char* SimulatorBluetoothRxTx::receive()
     else
     {
         std::cout << "ERROR: Function \"receiveBluetoothPacket\" not found!" << std::endl;
+        return nullptr;
     }
 }
 

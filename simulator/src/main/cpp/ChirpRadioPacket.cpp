@@ -78,6 +78,10 @@ int ChirpRadioPacket::getGroupId()
     {
         return this->groupId;
     }
+    else
+    {
+        return -1;
+    }
 }
 
 void ChirpRadioPacket::setGroupId(int groupId)
@@ -110,6 +114,10 @@ int ChirpRadioPacket::getSequenceNumber()
     if(this->packetType == RADIO_DATA_PACKET)
     {
         return this->sequenceNumber;
+    }
+    else
+    {
+        return -1;
     }
 }
 
@@ -246,5 +254,9 @@ char* ChirpRadioPacket::serialize()
             position++;
         }
         return packet;
+    }
+    else 
+    {
+        return nullptr;
     }
 }

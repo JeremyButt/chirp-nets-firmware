@@ -37,7 +37,6 @@ public class Packet {
         {
             e.printStackTrace();
         }
-        ;
     }
 
     public byte[] getBytes()

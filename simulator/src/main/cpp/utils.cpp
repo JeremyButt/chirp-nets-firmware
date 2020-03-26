@@ -21,6 +21,10 @@ bool parse_bool(char c)
     {
         return true;
     }
+    else
+    {
+        return false;
+    }
 }
 
 char* serialize_int(int i)

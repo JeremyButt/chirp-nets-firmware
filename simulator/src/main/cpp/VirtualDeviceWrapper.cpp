@@ -121,5 +121,3 @@ ChirpRouter* get_router(JNIEnv *env, jobject obj)
 {
 	return (ChirpRouter*) env->GetLongField(obj, get_routerPtr_FieldId(env, obj));
 }
-
-

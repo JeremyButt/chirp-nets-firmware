@@ -33,7 +33,9 @@ public class Simulator
         ((VirtualDeviceWrapper)this.devices.toArray()[0]).phoneSendBluetoothPacket(new Packet(1,1, 1, "Hello World, My Name Is Jeremy!").getBytes());
         sleep(2000);
         ((VirtualDeviceWrapper)this.devices.toArray()[3]).phoneSendBluetoothPacket(new Packet(1,1, 4, "I cannot reach node 1 by myself").getBytes());
+        sleep(2000);
 
+        endSimulation();
     }
 
     private void sleep(int ms)

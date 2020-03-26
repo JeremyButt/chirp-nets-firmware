@@ -46,7 +46,7 @@ void ChirpBluetoothPacket::setPacketType(int packetType)
 
 bool ChirpBluetoothPacket::isInitPacket()
 {
-    return (this->packetType == BLUETOOTH_INIT_PACKET);
+    return this->packetType == BLUETOOTH_INIT_PACKET;
 }
 
 int ChirpBluetoothPacket::getGroupId()
@@ -82,18 +82,16 @@ void ChirpBluetoothPacket::setData(char* data)
 {
     if(this->packetType == BLUETOOTH_DATA_PACKET)
     {
-        int i = 0;
-        while(i < MAX_BLUETOOTH_DATA_SIZE)
+        for(int i = 0; i < MAX_BLUETOOTH_DATA_SIZE; i++)
         {
             this->data[i] = data[i];
-            i++;
         }
     }
 }
 
 char* ChirpBluetoothPacket::serialize()
 {
-    char* packet = new char[128];
+    char* packet = new char[MAX_BLUETOOTH_PACKET_SIZE];
     packet[0] = serialize_int(this->packetType)[0];
     packet[1] = serialize_int(this->groupId)[0];
     char* nodeId = serialize_2digit_int(this->nodeId);

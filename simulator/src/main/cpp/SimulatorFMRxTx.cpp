@@ -46,6 +46,7 @@ char* SimulatorFMRxTx::receive()
     else
     {
         std::cout << "ERROR: Function \"receive\" not found!" << std::endl;
+        return nullptr;
     }
 }
 

@@ -2,6 +2,7 @@
 #define BLUETOOTH_DATA_PACKET 1
 
 #define MAX_BLUETOOTH_DATA_SIZE 123
+#define MAX_BLUETOOTH_PACKET_SIZE 128
 
 /**
  * Bluetooth Packet Format:
