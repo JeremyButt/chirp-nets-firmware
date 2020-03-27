@@ -62,7 +62,8 @@ void ChirpRouter::send(char payload[], size_t size)
 
 char* ChirpRouter::receive()
 {
-    char* received_data = radio->receive();
+    char* received_data;
+    radio->receive(received_data);
     if(received_data != NULL)
     {
         ChirpRadioPacket radio_packet = ChirpRadioPacket(received_data);

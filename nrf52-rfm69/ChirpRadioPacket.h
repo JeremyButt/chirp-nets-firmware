@@ -1,3 +1,4 @@
+#include <SPI.h>                // Included with Arduino IDE, should also add https://github.com/LowPowerLab/SPIFlash
 #define MAX_DATA_SIZE 11
 #define MAX_NEIGHBOUR_GROUPS_SIZE 17
 #define MAX_MESSAGE_SEGMENTS 128

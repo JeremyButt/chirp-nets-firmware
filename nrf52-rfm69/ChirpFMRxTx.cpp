@@ -1,3 +1,4 @@
+#include <SPI.h>                // Included with Arduino IDE, should also add https://github.com/LowPowerLab/SPIFlash
 #include "ChirpFMRxTx.h"
 
 int ChirpFMRxTx::getNodeId(){return this->nodeId;}

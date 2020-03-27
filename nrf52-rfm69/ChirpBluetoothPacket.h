@@ -1,3 +1,4 @@
+#include <SPI.h>                // Included with Arduino IDE, should also add https://github.com/LowPowerLab/SPIFlash
 #define BLUETOOTH_INIT_PACKET 0
 #define BLUETOOTH_DATA_PACKET 1
 

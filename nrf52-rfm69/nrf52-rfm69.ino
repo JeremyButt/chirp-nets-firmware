@@ -12,7 +12,7 @@ void setup()
 {
   radio.init();
   bluetooth.init();
-	router.init(radio);
+	router.init(&radio);
 }
 
 /**************************************************************************/
@@ -22,16 +22,17 @@ void setup()
 /**************************************************************************/
 void loop()
 {
-  char* bluetoothPacket = bluetooth->receive();
+  char* bluetoothPacket;
+  bluetooth.receive(bluetoothPacket);
 	if(bluetoothPacket != nullptr)
 	{
-		router->send(bluetoothPacket, strlen(bluetoothPacket));
+		router.send(bluetoothPacket, strlen(bluetoothPacket));
 	}
 
-	char* receivedData = router->receive();
+	char* receivedData = router.receive();
 	if(receivedData != nullptr)
 	{
-		bluetooth->send(receivedData, strlen(receivedData));
+		bluetooth.send(receivedData, strlen(receivedData));
 	}
   // char packet[122] = {NULL};
   // blue_io.receive(packet);

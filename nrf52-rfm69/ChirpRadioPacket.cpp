@@ -48,7 +48,7 @@ ChirpRadioPacket::ChirpRadioPacket(char packet[])
     } 
     else
     {
-        throw "ERROR: This is NOT a Valid Packet Type!";
+//        throw "ERROR: This is NOT a Valid Packet Type!";
     }
 }
 
@@ -98,7 +98,7 @@ int ChirpRadioPacket::getId()
     {
         return this->id;
     }
-    return USHRT_MAX;
+    return -1;
 }
 
 void ChirpRadioPacket::setId(int id)
