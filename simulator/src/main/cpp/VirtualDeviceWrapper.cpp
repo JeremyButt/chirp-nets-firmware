@@ -39,14 +39,16 @@ JNIEXPORT void JNICALL Java_VirtualDeviceWrapper_loop(JNIEnv *env, jobject obj)
 	bluetooth->init(env, obj);
 	router->init(radio);
 
-	char* bluetoothPacket = bluetooth->receive();
-	if(bluetoothPacket != nullptr)
+	char bluetoothPacket[128] = {NULL};
+	bluetooth->receive(bluetoothPacket);
+	if(bluetoothPacket[0])
 	{
 		router->send(bluetoothPacket, strlen(bluetoothPacket));
 	}
 
-	char* receivedData = router->receive();
-	if(receivedData != nullptr)
+	char receivedData[128] = {NULL};
+	router->receive(receivedData);
+	if(receivedData[0])
 	{
 		bluetooth->send(receivedData, strlen(receivedData));
 	}

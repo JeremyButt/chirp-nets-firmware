@@ -88,7 +88,7 @@ public class VirtualDeviceWrapper extends Thread{
         try
         {
             byte[] payload = this.bluetoothPacketsSending.pop();
-            if(payload != null)
+            if(payload.length > 0)
             {
                 return new Packet(payload).toString();
             }

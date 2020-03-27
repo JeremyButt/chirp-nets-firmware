@@ -13,7 +13,7 @@ void SimulatorBluetoothRxTx::init(JNIEnv* env, jobject obj)
     this->obj = obj;
 }
 
-char* SimulatorBluetoothRxTx::receive()
+void SimulatorBluetoothRxTx::receive(char ch[])
 {
     jclass cls = this->env->FindClass(clazz);
     jmethodID m_id = this->env->GetMethodID(cls, "receiveBluetoothPacket", "()[B");
@@ -22,14 +22,12 @@ char* SimulatorBluetoothRxTx::receive()
         jbyteArray packet = (jbyteArray)this->env->CallObjectMethod(this->obj, m_id);
         if(packet != 0)
         {
-            return getCharsFromJByteArray(packet);
+            strcpy(ch, getCharsFromJByteArray(packet));
         }
-        return nullptr;
     }
     else
     {
         std::cout << "ERROR: Function \"receiveBluetoothPacket\" not found!" << std::endl;
-        return nullptr;
     }
 }
 

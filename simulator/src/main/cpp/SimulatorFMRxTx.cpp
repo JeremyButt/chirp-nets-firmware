@@ -30,7 +30,7 @@ void SimulatorFMRxTx::send(int toAddress, char payload[], size_t len)
     }
 }
 
-char* SimulatorFMRxTx::receive()
+void SimulatorFMRxTx::receive(char ch[])
 {
     jclass cls = this->env->FindClass(clazz);
     jmethodID m_id = this->env->GetMethodID(cls, "receive", "()[B");
@@ -39,14 +39,12 @@ char* SimulatorFMRxTx::receive()
         jbyteArray packet = (jbyteArray)this->env->CallObjectMethod(this->obj, m_id);
         if(packet != 0)
         {
-            return getCharsFromJByteArray(packet);
+            strcpy(ch, getCharsFromJByteArray(packet));
         }
-        return nullptr;
     }
     else
     {
         std::cout << "ERROR: Function \"receive\" not found!" << std::endl;
-        return nullptr;
     }
 }
 

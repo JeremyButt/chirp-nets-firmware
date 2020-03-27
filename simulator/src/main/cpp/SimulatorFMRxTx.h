@@ -10,7 +10,7 @@ class SimulatorFMRxTx: public ChirpFMRxTx
         SimulatorFMRxTx();
         void init(JNIEnv*, jobject);
         void send(int, char[], size_t);
-        char* receive();
+        void receive(char[]);
     private:
         JNIEnv* env;
         jobject obj;
