@@ -60,11 +60,11 @@ void ChirpRouter::send(char payload[], size_t size)
     }
 }
 
-char* ChirpRouter::receive()
+void ChirpRouter::receive(char ch[])
 {
-    char* received_data;
+    char received_data[20] = {NULL}; 
     radio->receive(received_data);
-    if(received_data != NULL)
+    if(received_data[0])
     {
         ChirpRadioPacket radio_packet = ChirpRadioPacket(received_data);
         if(!aleadyReceived(radio_packet) && radio_packet.getSourceId() != this->nodeId)
@@ -81,25 +81,16 @@ char* ChirpRouter::receive()
                     bluetooth_packet.setGroupId(radio_packet.getGroupId());
                     bluetooth_packet.setNodeId(radio_packet.getSourceId());
                     bluetooth_packet.setData(radio_packet.getData());
-                    return bluetooth_packet.serialize();
+                    strcpy(ch, bluetooth_packet.serialize());
                 }
                 else
                 {
                     this->addToMessageSegmentCache(radio_packet);
-                    ChirpBluetoothPacket* bluetooth_packet = getMessageFromCache(radio_packet);
-                    if(bluetooth_packet != nullptr)
-                    {
-                        return bluetooth_packet->serialize();
-                    }
+                    getMessageFromCache(radio_packet, ch);
                 }
-            }
-            else
-            {
-                return nullptr;
             }
         }
     }
-    return nullptr;
 }
 
 void ChirpRouter::neighborNodeDiscovery()
@@ -177,12 +168,12 @@ bool ChirpRouter::aleadyReceived(ChirpRadioPacket packet)
     return false;
 }
 
-ChirpBluetoothPacket* ChirpRouter::getMessageFromCache(ChirpRadioPacket packet)
+void ChirpRouter::getMessageFromCache(ChirpRadioPacket packet, char ch[])
 {
-    ChirpBluetoothPacket* bluetooth_packet = new ChirpBluetoothPacket();
-    bluetooth_packet->setPacketType(BLUETOOTH_DATA_PACKET);
-    bluetooth_packet->setNodeId(packet.getSourceId());
-    bluetooth_packet->setGroupId(packet.getGroupId());
+    ChirpBluetoothPacket bluetooth_packet = ChirpBluetoothPacket();
+    bluetooth_packet.setPacketType(BLUETOOTH_DATA_PACKET);
+    bluetooth_packet.setNodeId(packet.getSourceId());
+    bluetooth_packet.setGroupId(packet.getGroupId());
     char data[MAX_BLUETOOTH_DATA_SIZE];
     int data_index = 0;
 
@@ -203,7 +194,7 @@ ChirpBluetoothPacket* ChirpRouter::getMessageFromCache(ChirpRadioPacket packet)
     }
     if(max_seq_num == 0 || max_seq_num+1 > count)
     {
-        return nullptr;
+        return;
     }
 
     for(int i = 0; i < max_seq_num+1; i++)
@@ -233,7 +224,7 @@ ChirpBluetoothPacket* ChirpRouter::getMessageFromCache(ChirpRadioPacket packet)
         }
     }
     this->messageSegmentCacheSize = this->messageSegmentCacheSize - count;
-    bluetooth_packet->setData(data);
+    bluetooth_packet.setData(data);
 
-    return bluetooth_packet;
+    strcpy(ch, bluetooth_packet.serialize());
 }

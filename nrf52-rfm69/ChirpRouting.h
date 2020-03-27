@@ -34,7 +34,7 @@ class ChirpRouter
         ChirpRouter();
         void init(ChirpFMRxTx*);
         void send(char[], size_t);
-        char* receive();
+        void receive(char[]);
         
     private:
         ChirpFMRxTx* radio;
@@ -53,5 +53,5 @@ class ChirpRouter
         void addToMessageSegmentCache(ChirpRadioPacket);
         void addToHistoryCache(ChirpRadioPacket);
         bool aleadyReceived(ChirpRadioPacket);
-        ChirpBluetoothPacket* getMessageFromCache(ChirpRadioPacket);
+        void getMessageFromCache(ChirpRadioPacket, char[]);
 };
