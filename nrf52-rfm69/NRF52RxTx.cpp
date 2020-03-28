@@ -73,11 +73,7 @@ void NRF52RxTx::receive(char ch[])
     int i = 0;
     while (bleuart.available())
     {
-        ch[i] = (char)bleuart.read();
-        if (ch[i] != 0)
-        {
-            i++;
-        }
+        ch[i++] = (char)bleuart.read();
         Serial.println(ch[i]);
     }
 }
