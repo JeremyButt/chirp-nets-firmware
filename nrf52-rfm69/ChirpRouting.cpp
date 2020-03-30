@@ -42,7 +42,7 @@ void ChirpRouter::send(char payload[], size_t size)
             int pos = 0;
             for(int j = i*(MAX_DATA_SIZE-1); j < ((i*(MAX_DATA_SIZE-1))+MAX_DATA_SIZE-1); j++)
             {
-                if(pos < data_size-1)
+                if(pos < data_size)
                 {
                     data[pos] = bluetooth_packet.getData()[j];
                 }
@@ -52,7 +52,6 @@ void ChirpRouter::send(char payload[], size_t size)
                 }
                 pos++;
             }
-            data[pos] = NULL;
             radio_packet.setData(data);
             this->radio->send(BROADCAST_ADDR, radio_packet.serialize(), 20);
         }
@@ -64,7 +63,7 @@ void ChirpRouter::receive(char ch[])
 {
     char received_data[20] = {NULL}; 
     radio->receive(received_data);
-    if(received_data[0])
+    if(received_data[0] != NULL)
     {
         ChirpRadioPacket radio_packet = ChirpRadioPacket(received_data);
         if(!aleadyReceived(radio_packet) && radio_packet.getSourceId() != this->nodeId)

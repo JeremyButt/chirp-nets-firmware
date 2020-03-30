@@ -10,7 +10,7 @@ class SimulatorBluetoothRxTx: public ChirpBluetoothRxTx
         SimulatorBluetoothRxTx();
         void init(JNIEnv* env, jobject obj);
         void send(char[], size_t);
-        char* receive();
+        void receive(char[]);
     private:
         JNIEnv* env;
         jobject obj;
