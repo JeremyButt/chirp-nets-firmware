@@ -69,8 +69,3 @@ void RFM69RxTx::receive(char *packet)
         delay(100);
     }
 }
-
-int RFM69RxTx::getToAddress(char payload[])
-{
-    return (int)((int)payload[0]) - 48;
-}
