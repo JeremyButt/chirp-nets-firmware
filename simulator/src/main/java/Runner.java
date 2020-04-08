@@ -9,7 +9,7 @@ public class Runner
         Config config = configParser.parse("simulator_config.json");
         Simulator simulator = new Simulator(config);
         simulator.simulate();
-        ReportGenerator reportGenerator = new ReportGenerator(simulator);
+        ReportGenerator reportGenerator = new ReportGenerator(simulator, config);
         reportGenerator.generateReport();
         reportGenerator.printReport();
     }

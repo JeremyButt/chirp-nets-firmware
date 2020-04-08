@@ -1,8 +1,6 @@
 import Config.Config;
 import Config.ConfigPacket;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +35,7 @@ public class Simulator
     {
         for(VirtualDeviceWrapper device : this.devices.values())
         {
-            device.phoneSendBluetoothPacket(new Packet(0, config.getGroupIds().get(device.getDeviceId()), device.getDeviceId()));
+            device.phoneSendBluetoothPacket(new Packet(Packet.INIT_PACKET, config.getGroupIds().get(device.getDeviceId()), device.getDeviceId()));
         }
         sleep(2000);
     }
@@ -47,7 +45,7 @@ public class Simulator
         for(ConfigPacket packetToSend : config.getPacketsToSend())
         {
             VirtualDeviceWrapper device = this.devices.get(packetToSend.getFromNodeId());
-            device.phoneSendBluetoothPacket(new Packet(1, device.getGroupId(), device.getDeviceId(), packetToSend.getMessage()));
+            device.phoneSendBluetoothPacket(new Packet(Packet.DATA_PACKET, device.getGroupId(), device.getDeviceId(), packetToSend.getMessage()));
             sleep(packetToSend.getDelay());
         }
     }

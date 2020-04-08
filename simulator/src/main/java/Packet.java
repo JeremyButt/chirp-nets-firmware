@@ -1,25 +1,32 @@
 import java.io.UnsupportedEncodingException;
 
-public class Packet {
+public class Packet
+{
+    static int INIT_PACKET = 2;
+    static int DATA_PACKET = 1;
+
     private int type;
     private int groupId;
     private int nodeId;
     private String data;
 
-    public Packet(int type, int groupId, int nodeId, String data) {
+    public Packet(int type, int groupId, int nodeId, String data)
+    {
         this.type = type;
         this.groupId = groupId;
         this.nodeId = nodeId;
         this.data = data;
     }
 
-    public Packet(int type, int groupId, int nodeId) {
+    public Packet(int type, int groupId, int nodeId)
+    {
         this.type = type;
         this.groupId = groupId;
         this.nodeId = nodeId;
     }
 
-    public Packet(byte[] payload) {
+    public Packet(byte[] payload)
+    {
         this.type = (int) (payload[0]-48);
         this.groupId = (int) (payload[1]-48);
         this.nodeId = ((int)(payload[2]-48) * 10) + (int)(payload[3]-48);
@@ -43,12 +50,12 @@ public class Packet {
     {
         try
         {
-            if(this.type == 1)
+            if(this.type == DATA_PACKET)
             {
                 byte bytes[] = (String.valueOf(this.type) + String.valueOf(this.groupId) + (this.nodeId<10?"0":"") + String.valueOf(this.nodeId) + data ).getBytes("UTF-8");
                 return bytes;
             }
-            else if(this.type == 0)
+            else if(this.type == INIT_PACKET)
             {
                 byte bytes[] = (String.valueOf(this.type) + String.valueOf(this.groupId) + (this.nodeId<10?"0":"") + String.valueOf(this.nodeId)).getBytes("UTF-8");
                 return bytes;
@@ -63,7 +70,7 @@ public class Packet {
 
     public boolean isInitPacket()
     {
-        return this.type == 0;
+        return this.type == INIT_PACKET;
     }
 
     public int getGroupId()
@@ -72,12 +79,13 @@ public class Packet {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Packet{" +
                 "type=" + type +
                 ", groupId=" + groupId +
                 ", nodeId=" + nodeId +
-                ((this.type == 1 ) ? ", data='" + data + '\'' : "") +
+                ((this.type == DATA_PACKET) ? ", data='" + data + '\'' : "") +
                 '}';
     }
 }

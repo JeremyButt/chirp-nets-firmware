@@ -1,20 +1,28 @@
+import Config.Config;
+
 public class ReportGenerator
 {
     private Simulator simulator;
+    private Config config;
     private String report;
 
-    public ReportGenerator(Simulator simulator)
+    public ReportGenerator(Simulator simulator, Config config)
     {
         this.simulator = simulator;
+        this.config = config;
         this.report = "";
     }
 
     public void generateReport()
     {
+        Integer totalMessages = this.config.getPacketsToSend().size();
         for(VirtualDeviceWrapper virtualDevice : simulator.getDevices().values())
         {
             this.report = this.report.concat("======================================================================\n");
             this.report = this.report.concat("Device ID: " + virtualDevice.getDeviceId() + " of Group ID: " + virtualDevice.getGroupId() + "\n");
+
+            this.report = this.report.concat("----------------------------------------------------------------------\n");
+            this.report = this.report.concat("Messages: " + (virtualDevice.getSentMessages().size() + virtualDevice.getReceivedMessages().size()) + "/" + totalMessages + "\n");
 
             // INIT Packets
             this.report = this.report.concat("----------------------------------------------------------------------\n");

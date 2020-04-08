@@ -41,14 +41,14 @@ JNIEXPORT void JNICALL Java_VirtualDeviceWrapper_loop(JNIEnv *env, jobject obj)
 
 	char bluetoothPacket[128] = {NULL};
 	bluetooth->receive(bluetoothPacket);
-	if(bluetoothPacket[0])
+	if(bluetoothPacket[0] != NULL)
 	{
 		router->send(bluetoothPacket, strlen(bluetoothPacket));
 	}
 
 	char receivedData[128] = {NULL};
 	router->receive(receivedData);
-	if(receivedData[0])
+	if(receivedData[0] != NULL)
 	{
 		bluetooth->send(receivedData, strlen(receivedData));
 	}
