@@ -61,13 +61,23 @@ public class Packet {
         return null;
     }
 
+    public boolean isInitPacket()
+    {
+        return this.type == 0;
+    }
+
+    public int getGroupId()
+    {
+        return this.groupId;
+    }
+
     @Override
     public String toString() {
         return "Packet{" +
                 "type=" + type +
                 ", groupId=" + groupId +
                 ", nodeId=" + nodeId +
-                ", data='" + data + '\'' +
+                ((this.type == 1 ) ? ", data='" + data + '\'' : "") +
                 '}';
     }
 }
