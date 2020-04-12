@@ -1,19 +1,17 @@
+import Config.Config;
+import Config.ConfigParser;
 import org.junit.jupiter.api.Test;
-
-import java.io.UnsupportedEncodingException;
 
 public class VirtualDeviceWrapperTest {
     @Test
     public void Test_VirtualDeviceWrapper_Boot(){
         System.loadLibrary("VirtualDeviceWrapper");
-        Environment env = new Environment();
+        ConfigParser configParser = new ConfigParser();
+        Config config = configParser.parse("simulator_config.json");
+        Environment env = new Environment(config);
         VirtualDeviceWrapper virtualDevice = new VirtualDeviceWrapper(1, env);
 
-        try {
-            virtualDevice.phoneSendBluetoothPacket("1helloworld2!".getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        virtualDevice.phoneSendBluetoothPacket(new Packet(0,1,1,"hello"));
 
         virtualDevice.start();
     }

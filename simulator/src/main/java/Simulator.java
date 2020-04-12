@@ -1,44 +1,56 @@
-import java.util.ArrayList;
-import java.util.Collection;
+import Config.Config;
+import Config.ConfigPacket;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Simulator
 {
-    Collection<VirtualDeviceWrapper> devices;
-    Environment environment;
-    Map<Arg, Object> args;
+    private Map<Integer, VirtualDeviceWrapper> devices;
+    private Environment environment;
+    private Config config;
 
-    public Simulator(Map<Arg, Object> args)
+    public Simulator(Config config)
     {
         //Load JNI Library
         System.loadLibrary("VirtualDeviceWrapper");
 
-        this.args = args;
-        this.environment = new Environment();
+        this.config = config;
+        this.environment = new Environment(config);
         this.constructDevices();
     }
 
     public void simulate()
     {
-        // Initialize Devices with Bluetooth INIT PACKET
-        ((VirtualDeviceWrapper)this.devices.toArray()[0]).phoneSendBluetoothPacket(new Packet(0,1, 1).getBytes());
-        ((VirtualDeviceWrapper)this.devices.toArray()[1]).phoneSendBluetoothPacket(new Packet(0,1, 2).getBytes());
-        ((VirtualDeviceWrapper)this.devices.toArray()[2]).phoneSendBluetoothPacket(new Packet(0,1, 3).getBytes());
-        ((VirtualDeviceWrapper)this.devices.toArray()[3]).phoneSendBluetoothPacket(new Packet(0,1, 4).getBytes());
-
-        sleep(2000);
-
-        // Send Messages
-        ((VirtualDeviceWrapper)this.devices.toArray()[0]).phoneSendBluetoothPacket(new Packet(1,1, 1, "Hello World, My Name Is Jeremy!").getBytes());
-        sleep(2000);
-        ((VirtualDeviceWrapper)this.devices.toArray()[3]).phoneSendBluetoothPacket(new Packet(1,1, 4, "I cannot reach node 1 by myself").getBytes());
-        sleep(2000);
-
+        System.out.println("================================================================================================");
+        System.out.println("REALTIME SIMULATION OUTPUT");
+        this.sendInitPackets();
+        this.sendPackets();
         endSimulation();
+        System.out.println("END OF SIMULATION");
+        System.out.println("================================================================================================");
     }
 
-    private void sleep(int ms)
+    private void sendInitPackets()
+    {
+        for(VirtualDeviceWrapper device : this.devices.values())
+        {
+            device.phoneSendBluetoothPacket(new Packet(Packet.INIT_PACKET, config.getGroupIds().get(device.getDeviceId()), device.getDeviceId()));
+        }
+        sleep(2000);
+    }
+
+    private void sendPackets()
+    {
+        for(ConfigPacket packetToSend : config.getPacketsToSend())
+        {
+            VirtualDeviceWrapper device = this.devices.get(packetToSend.getFromNodeId());
+            device.phoneSendBluetoothPacket(new Packet(Packet.DATA_PACKET, device.getGroupId(), device.getDeviceId(), packetToSend.getMessage()));
+            sleep(packetToSend.getDelay());
+        }
+    }
+
+    static private void sleep(int ms)
     {
         try {
             Thread.sleep(ms);
@@ -49,24 +61,30 @@ public class Simulator
 
     private void constructDevices()
     {
-//        int numDevices = (Integer) this.args.get(Arg.NUMDEVICES);
-//        int[] signalStrenths = (int[]) this.args.get(Arg.SIGNAL_STRENGTHS);
-        int numDevices = 4;
-        this.devices = new ArrayList<VirtualDeviceWrapper>();
-        for (int i = 1; i < numDevices+1; i++)
+        if(this.config.getDeviceIds().size() != this.config.getNumDevices())
         {
-            VirtualDeviceWrapper virtualDevice = new VirtualDeviceWrapper(i, this.environment);
+            return;
+        }
+
+        this.devices = new HashMap<>();
+        for (Integer deviceId : this.config.getDeviceIds())
+        {
+            VirtualDeviceWrapper virtualDevice = new VirtualDeviceWrapper(deviceId, this.environment);
             virtualDevice.start();
-            this.devices.add(virtualDevice);
+            this.devices.put(deviceId, virtualDevice);
         }
     }
 
     private void endSimulation()
     {
-        for(VirtualDeviceWrapper device : this.devices)
+        for(VirtualDeviceWrapper device : this.devices.values())
         {
             device.kill();
         }
     }
 
+    public Map<Integer, VirtualDeviceWrapper> getDevices()
+    {
+        return this.devices;
+    }
 }

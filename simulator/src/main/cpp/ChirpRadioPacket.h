@@ -16,7 +16,6 @@
  *          type(1byte->1char->int) source(2bytes->2char->2digit int) groupId(1char->int) id(2bytes->2char->2digit int) sequenceNumber(2bytes->2char->2digit int) lastPacket(1byte->1char->bool) data(11bytes->11char array)
  **/
 
-
 class ChirpRadioPacket
 {
     public:

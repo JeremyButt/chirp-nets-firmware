@@ -1,13 +1,16 @@
-import java.util.Map;
+import Config.Config;
+import Config.ConfigParser;
 
 public class Runner
 {
     public static void main(String[] args)
     {
-        ArgParser argParser = new ArgParser();
-        Map<Arg, Object> parsedArgs;
-        parsedArgs = argParser.parse(args);
-        Simulator simulator = new Simulator(parsedArgs);
+        ConfigParser configParser = new ConfigParser();
+        Config config = configParser.parse("simulator_config.json");
+        Simulator simulator = new Simulator(config);
         simulator.simulate();
+        ReportGenerator reportGenerator = new ReportGenerator(simulator, config);
+        reportGenerator.generateReport();
+        reportGenerator.printReport();
     }
 }

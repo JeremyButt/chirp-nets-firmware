@@ -20,8 +20,8 @@ void SimulatorFMRxTx::send(int toAddress, char payload[], size_t len)
     if (m_id != 0)
     {
         int nodeId = this->getNodeId();
-        jbyteArray packet = this->env->NewByteArray(len);
-        this->env->SetByteArrayRegion(packet, 0, len, reinterpret_cast<jbyte*>(payload));
+        jbyteArray packet = this->env->NewByteArray(len-1);
+        this->env->SetByteArrayRegion(packet, 0, len-1, reinterpret_cast<jbyte*>(payload));
         this->env->CallVoidMethod(this->obj, m_id, nodeId, toAddress, packet);
     }
     else
